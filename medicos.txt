@@ -1,1 +1,1 @@
-Ana Correia 12345;dentista;aguiar@gmail.com;;0;0;0
+Ana Correia;12345;dentista;aguiar@gmail.com;0;0;0
