@@ -1,0 +1,3 @@
+61999;João Silva;;;a61999@iscte-iul.pt;100
+61777;Luis Passos;;;a61777@iscte-iul.pt;100
+55555;Maria Aguiar;;;a55555@iscte-iul.pt;100
