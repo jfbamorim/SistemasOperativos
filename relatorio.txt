@@ -1,0 +1,26 @@
+Relatorio primeiro trabalho prático - Jorge Amorim - 82911 - LEI-PL
+
+1. Cria paciente - utiliza-se uma regex para encontrar os primeiros alunos, dado que começam com o char 'a'.
+Assim recolhemos os primeiros dez alunos e tratamos linha a linha por forma a criar o ficheiro pacientes.txt.
+No fim remove-se o ficheiro auxiliar que ajuda na construção do ficheiro final.
+
+2. Cria medico - verifica-se inicialmente se são colocados argumentos. Depois, caso existam argumentos verifica-se a
+existência do ficheiro (caso não exista, cria-se um novo tal como referido no enunciado). Por fim verifica-se a já
+existência do numero de cédula; caso não exista adiciona-se um novo médico ao ficheiro medicos.txt
+
+3. Stats - em primeira instância utilizado o comando sed para filtrar os pacientes que pertençam a localidade colocada
+como primeiro argumento e coloca-se num ficheiro auxiliar.
+Posto isto, faz-se uma contagem do numero de pessoas e elimina-se o ficheiro auxiliar, para não criar lixo.
+
+Depois, cria-se outro ficheiro auxiliar e um faz-se um ciclo pelo ficheiro medicos.txt por forma a apurar os valores
+que cada médico tem - utilizando o comando cut. Se for superior ao valor 500, essa linha é inserida no ficheiro auxiliar
+e no fim faz-se a contagem dos ficheiros colocados com valor superior a 500.
+Remove-se o ficheiro auxiliar. 
+Nota -> Utiliza-se duas vezes o comando xargs por forma a fazer trim dos espaços, porque o comando wc -l tem muitos
+espaços.
+
+4. Avalia medicos - faz-se um ciclo no ficheiro dos medicos.txt e apura-se para duas variaveis os valores de numero
+de consultas e avaliação de cada medico.
+Caso as condições colocadas no enunciado se verifiquem, esta linha é colocada no ficheiro lista_negra_medicos, 
+que é criado logo no inicio do programa.
+
