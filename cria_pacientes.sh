@@ -1,5 +1,5 @@
 #!/bin/bash
-#grep 'a[0-9]' /etc/passwd | head -n 10 >> ficheiroextraido.txt
+#grep 'a[0-9]' /etc/passwd | head -n 10 > ficheiroextraido.txt
 
 while IFS="" read -r p || [ -n "$p" ]
 do
@@ -10,7 +10,6 @@ do
    echo "$numero;$nome;;;$email;100" 
    echo "$numero;$nome;;;$email;100" >> pacientes.txt 
 done < ficheiroextraido.txt
-#done < ficheiroteste.txt 
 
 #rm -f ficheiroextraido.txt
 

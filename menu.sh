@@ -6,8 +6,9 @@ while [[ $choice != 0 ]]; do
   echo "3. Stats"
   echo "4. Avalia médicos"
   echo "0. Sair"
-
-  read -p "Escolha uma das opções" choice
+  
+  echo "Escolha uma das opções:"
+  read choice
 
   case $choice in
     1)./cria_pacientes.sh ;;
@@ -20,7 +21,11 @@ while [[ $choice != 0 ]]; do
       echo "Introduza o email:"
       read email
       ./cria_medico.sh $nome $nced $espec $email;;
-    3)./stats $1 $2;;
+    3)echo "Introduza a localidade:"
+      read local
+      echo "Introduza o saldo mínimo:"
+      read saldo
+      ./stats.sh $local $saldo;;
     4)./avalia_medicos.sh;;
     0)exit;;
     *)echo "Opção não válida";;
