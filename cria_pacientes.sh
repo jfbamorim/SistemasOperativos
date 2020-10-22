@@ -1,14 +1,13 @@
 #!/bin/bash
-grep 'a[0-9]' /etc/passwd | head -n 10 > ficheiroextraido.txt
+grep 'a[0-9]' /etc/passwd | head -n 10 | sed 's/,,,//' > ficheiroextraido.txt
 
 while IFS="" read -r p || [ -n "$p" ]
 do
    linha=$p
-   numero=$(echo $linha | cut -d ":" -f1)
+   numero=$(echo $linha | cut -d ":" -f1 | sed 's/a//' )
    nome=$(echo $linha | cut -d ":" -f5)
    email=("a$numero@iscte-iul.pt")
-   echo "$numero;$nome;;;$email;100" 
-   echo "$numero;$nome;;;$email;100" >> pacientes.txt 
+   echo "$numero;$nome;;;$email;100" >> pacientes.txt
 done < ficheiroextraido.txt
 
 rm -f ficheiroextraido.txt

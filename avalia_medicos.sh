@@ -8,3 +8,4 @@ do
       echo $linha >> lista_negra_medicos.txt
    fi
 done < medicos.txt 
+cat lista_negra_medicos.txt
