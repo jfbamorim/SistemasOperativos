@@ -8,7 +8,7 @@ else
      if [ ! -e "$FILE" ]; then
 	touch medicos.txt
      fi
-     if grep -q $3 medicos.txt; then
+     if grep -q $2 medicos.txt; then
         echo "Já existe um médico com o numero de cedula $3"
      else
         nome="$1"

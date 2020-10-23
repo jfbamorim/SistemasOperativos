@@ -14,15 +14,13 @@ while [[ $choice != 0 ]]; do
     1)./cria_pacientes.sh ;;
     2)echo "Introduza o nome:" 
       read nome
-      newnome=""$nome""
       echo "Introduza o n º da cedula profissional:"
       read nced
       echo "Introduza a especialidade medica:"
       read espec
-      newesp=""$espec""
       echo "Introduza o email:"
       read email
-      ./cria_medico.sh "$newnome" $nced "$newesp" $email;;
+      ./cria_medico.sh "$nome" $nced "$espec" $email;;
     3)echo "Introduza a localidade:"
       read local
       echo "Introduza o saldo mínimo:"
