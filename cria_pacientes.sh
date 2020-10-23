@@ -1,5 +1,10 @@
 #!/bin/bash
 grep 'a[0-9]' /etc/passwd | head -n 10 | sed 's/,,,//' > ficheiroextraido.txt
+FILE="pacientes.txt"
+
+if [ -f "$FILE" ] ; then
+  rm -f "$FILE";
+fi
 
 while IFS="" read -r p || [ -n "$p" ]
 do
