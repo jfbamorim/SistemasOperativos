@@ -11,7 +11,11 @@ else
      if grep -q $3 medicos.txt; then
         echo "Já existe um médico com o numero de cedula $3"
      else
-        echo "$1;$2;$3;$4;0;0;0" >> medicos.txt
+        nome="$1"
+        ced=$2
+        esp="$3"
+        eml=$4
+        echo "$nome;$ced;$esp;$eml;0;0;0" >> medicos.txt
         cat medicos.txt
      fi
 fi
