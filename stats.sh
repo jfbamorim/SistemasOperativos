@@ -2,6 +2,7 @@
 # recolha dos pacientes inscitos numa plataforma na localidade passada como primeiro arg
 FILEP="pacientes.txt"
 FILEM="medicos.txt"
+minval=500
 
 if [ -f "$FILEP" ]; then
    sed -n "/$1/P" pacientes.txt > tempfile.txt
@@ -20,7 +21,7 @@ if [ -f "$FILEM" ]; then
    do
       line=$p
       valor=$( echo $line | cut -d ";" -f7 )
-      if [ $valor -gt 500 ]; then
+      if [[ "$valor" -gt "$minval" ]]; then
         echo line >> countmeds.txt 
       fi
    done < medicos.txt
