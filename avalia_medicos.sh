@@ -1,7 +1,12 @@
 #!/bin/bash
 FILE="medicos.txt"
+NEWFILE="lista_negra_medicos"
 mincons=6
 minaval=5
+
+if [ ! -f "$NEWFILE" ]; then
+  touch lista_negra_medicos.txt
+fi
 if [ -f "$FILE" ]; then
    while IFS="" read -r p || [ -n "$p" ]
    do
