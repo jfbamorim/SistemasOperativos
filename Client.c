@@ -12,6 +12,7 @@ int spid;
 int pid, tpcons;
 char descript[100];
 // *********************************************************************/
+//método para armar e tratar qualquer sinal que venha para o Client
 void handle_signal(int signal){
     switch(signal){
         //C4 - Trata o sinal SIGHUP
@@ -48,7 +49,8 @@ void handle_signal(int signal){
             exit(EXIT_SUCCESS);
     }
 }
-
+//método que trata de escrever no ficheiro, alocação da instancia de consulta na memoria e espera de sinais do
+//servidor
 void escreveFicheiro(){
     FILE *fp;
     char srvpid[10];
@@ -84,7 +86,6 @@ void escreveFicheiro(){
     // Envio do sinal SIGUSR1 para o Servidor
     kill(spid, SIGUSR1);
 
-
     signal(SIGHUP, handle_signal);
     signal(SIGTERM, handle_signal);
     signal(SIGUSR2, handle_signal);
@@ -92,7 +93,7 @@ void escreveFicheiro(){
     while(1);
 
 }
-
+// handle para o alarm caso surjam duas instancias de cliente ao mesmo tempo para evitar concorrencia
 void handle_alarm(int signal){
     escreveFicheiro();
 }

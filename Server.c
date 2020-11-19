@@ -6,9 +6,12 @@
 #include <sys/wait.h>
 #include "Consulta.h"
 
+// ************** VARIAVEIS GLOBAIS DE PROGRAMA ********************************************/
 Consulta lista_consultas[10];
 int consultasNormal, consultasCOVID, consultasUrgente, consultasPerdidas, ultimaConsulta=0;
+// *****************************************************************************************/
 
+//método para contar o numero de consultas por sessão
 void contatipoconsulta(int itipo){
     switch(itipo){
         case 1:
@@ -22,7 +25,7 @@ void contatipoconsulta(int itipo){
             break;
     }
 }
-
+//modulo para criação e/ou atualização do ficheiro statsconsultas.dat
 void adminencerra(){
     //Ler o ficheiro anterior e recuperar os dados
     //e somar os novos valores, para atualizar o ficheiro
@@ -39,6 +42,8 @@ void adminencerra(){
     exit(EXIT_SUCCESS);
 }
 
+//método para inicio de consulta, agregando todos os dados necessarios e validando se é possivel iniciar a consulta
+//envia os sinais necessários ao cliente e cria processo filho através do fork
 void iniciaConsulta(){
     int ctipo, cpid;
     char cdesc[100], chartipo[1], charpid[10];
@@ -62,7 +67,7 @@ void iniciaConsulta(){
     printf("Chegou novo pedido de consulta do tipo %d, descricao %s e PID %d\n", ctipo, cdesc, cpid);
 
     //S3.3) Verifica se a Lista de Consultas tem alguma “vaga”.
-    if(ultimaConsulta >= 9){
+    if(ultimaConsulta > 10){
         printf("Lista de consultas cheia\n");
         consultasPerdidas+=1;
         kill(cpid, SIGUSR2);
@@ -74,6 +79,8 @@ void iniciaConsulta(){
         strcpy(lista_consultas[ultimaConsulta].descricao, cdesc);
         lista_consultas[ultimaConsulta].pid_consulta = cpid;
         printf("Consulta agendada para a sala %d\n", ultimaConsulta++);
+
+        contatipoconsulta(ctipo);
 
         int child = fork();
         if(child == 0){
@@ -91,6 +98,7 @@ void iniciaConsulta(){
     }
 }
 
+// inicializador do Servidor
 void init(){
     int contador;
     //S1) - Inicia a lista de consultas com o campo tipo = –1
@@ -122,8 +130,7 @@ void init(){
 }
 int main(){
     init();
-    //S3) - Arma e trata o sinal SIGUSR1 para que sejam tratados os pedidos de consultas que chegam ao
-    //sistema.
+    //S3) - Arma e trata o sinal SIGUSR1
     signal(SIGUSR1, iniciaConsulta);
     signal(SIGINT, adminencerra);
     while(1);
