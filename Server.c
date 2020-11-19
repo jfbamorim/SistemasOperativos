@@ -24,6 +24,8 @@ void contatipoconsulta(int itipo){
 }
 
 void adminencerra(){
+    //Ler o ficheiro anterior e recuperar os dados
+    //e somar os novos valores, para atualizar o ficheiro
     /*FILE * fp;
     remove("srvconsultas.txt");
     fp = fopen("statsconsultas.dat", "w");
@@ -41,6 +43,7 @@ void iniciaConsulta(){
     int ctipo, cpid;
     char cdesc[100], chartipo[1], charpid[10];
     FILE * fp;
+    //S3.1) Lê a informação do ficheiro PedidoConsulta.txt
     fp = fopen("pedidoconsulta.txt", "r");
     if (fp == NULL) {
         perror("fopen()");
@@ -50,12 +53,15 @@ void iniciaConsulta(){
     fgets(cdesc, 100, fp);
     fgets(charpid, 10, fp);
 
+    fclose(fp);
+
     ctipo = atoi(chartipo);
     cpid = atoi(charpid);
 
+    //S3.2) Escreve no ecrã a mensagem
     printf("Chegou novo pedido de consulta do tipo %d, descricao %s e PID %d\n", ctipo, cdesc, cpid);
 
-    //S.3.2 - Lista cheia e envia sinal ao Cliente
+    //S3.3) Verifica se a Lista de Consultas tem alguma “vaga”.
     if(ultimaConsulta >= 9){
         printf("Lista de consultas cheia\n");
         consultasPerdidas+=1;
@@ -68,22 +74,26 @@ void iniciaConsulta(){
         strcpy(lista_consultas[ultimaConsulta].descricao, cdesc);
         lista_consultas[ultimaConsulta].pid_consulta = cpid;
         printf("Consulta agendada para a sala %d\n", ultimaConsulta++);
+
         int child = fork();
         if(child == 0){
             kill(cpid, SIGHUP);
             sleep(10);
             printf("Consulta terminada na sala %d\n", ultimaConsulta-1);
             kill(cpid, SIGTERM);
-            exit(0);
+            exit(EXIT_SUCCESS);
         }
         else{
-            child = wait(NULL);
+            wait(NULL);
+            //Apagar o registo da consulta do array, decrementando o valor da ultima consulta
+            ultimaConsulta--;
         }
     }
 }
 
 void init(){
     int contador;
+    //S1) - Inicia a lista de consultas com o campo tipo = –1
     for(contador=1; contador < 10; ++contador){
         lista_consultas[contador].tipo = -1;
     }
@@ -95,6 +105,7 @@ void init(){
     consultasPerdidas = 0;
     ultimaConsulta = 0;
 
+    //S2) - Regista o PID do seu processo no ficheiro SrvConsultas.pid
     int pid = getpid();
     if (pid < 0){
         perror("Erro");
@@ -111,8 +122,9 @@ void init(){
 }
 int main(){
     init();
-    while(1){
-        signal(SIGUSR1, iniciaConsulta);
-        signal(SIGINT, adminencerra);
-    }
+    //S3) - Arma e trata o sinal SIGUSR1 para que sejam tratados os pedidos de consultas que chegam ao
+    //sistema.
+    signal(SIGUSR1, iniciaConsulta);
+    signal(SIGINT, adminencerra);
+    while(1);
 }
