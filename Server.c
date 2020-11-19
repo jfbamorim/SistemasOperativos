@@ -9,7 +9,6 @@
 // ************** VARIAVEIS GLOBAIS DE PROGRAMA ********************************************/
 Consulta lista_consultas[10];
 int consultasNormal, consultasCOVID, consultasUrgente, consultasPerdidas, ultimaConsulta=0;
-// *****************************************************************************************/
 
 //método para contar o numero de consultas por sessão
 void contatipoconsulta(int itipo){
@@ -33,6 +32,9 @@ void adminencerra(){
     remove("srvconsultas.txt");
     fp = fopen("statsconsultas.dat", "w");
     if (fp){
+    fwrite <- ficheiros binarios
+    fprintf <- ficheiros texto
+
         fprintf("Perdidas: %d", consultasPerdidas);
         fprintf("Tipo 1: %d", 0);
         fprintf("Tipo 2: %d", 0);
@@ -64,6 +66,8 @@ void iniciaConsulta(){
     cpid = atoi(charpid);
 
     //S3.2) Escreve no ecrã a mensagem
+    cdesc[strlen(cdesc)-1] = '\0';
+
     printf("Chegou novo pedido de consulta do tipo %d, descricao %s e PID %d\n", ctipo, cdesc, cpid);
 
     //S3.3) Verifica se a Lista de Consultas tem alguma “vaga”.
@@ -133,5 +137,5 @@ int main(){
     //S3) - Arma e trata o sinal SIGUSR1
     signal(SIGUSR1, iniciaConsulta);
     signal(SIGINT, adminencerra);
-    while(1);
+    while(1) pause(); //não fica em espera ativa
 }

@@ -11,13 +11,14 @@ int last_signal_name;
 int spid;
 int pid, tpcons;
 char descript[100];
-// *********************************************************************/
+
 //método para armar e tratar qualquer sinal que venha para o Client
 void handle_signal(int signal){
     switch(signal){
         //C4 - Trata o sinal SIGHUP
         case SIGHUP:
             last_signal_name = SIGHUP;
+            remove("pedidoconsulta.txt");
             printf("Consulta iniciada para o processo %d\n", spid);
             sleep(10);
             break;
@@ -26,7 +27,6 @@ void handle_signal(int signal){
             if (last_signal_name == SIGHUP) {
                 last_signal_name = SIGTERM;
                 printf("Consulta concluída para o processo %d\n", spid);
-                remove("pedidoconsulta.txt");
                 exit(EXIT_SUCCESS);
                 break;
             }
@@ -118,6 +118,6 @@ int main() {
         signal(SIGALRM, handle_alarm);
         signal(SIGINT, handle_signal);
         alarm(10);
-        while(1);
+        while(1) pause();
     }
 }
