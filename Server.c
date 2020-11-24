@@ -5,6 +5,7 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include "Consulta.h"
+#include "NumeroConsulta.h"
 
 // ************** VARIAVEIS GLOBAIS DE PROGRAMA ********************************************/
 Consulta lista_consultas[10];
@@ -28,19 +29,35 @@ void contatipoconsulta(int itipo){
 void adminencerra(){
     //Ler o ficheiro anterior e recuperar os dados
     //e somar os novos valores, para atualizar o ficheiro
-    /*FILE * fp;
+    FILE *fp;
+    int perdidas, covid, urgente, normal;
     remove("srvconsultas.txt");
-    fp = fopen("statsconsultas.dat", "w");
-    if (fp){
-    fwrite <- ficheiros binarios
-    fprintf <- ficheiros texto
 
-        fprintf("Perdidas: %d", consultasPerdidas);
-        fprintf("Tipo 1: %d", 0);
-        fprintf("Tipo 2: %d", 0);
-        fprintf("Tipo 3: %d", 0);
-        fclose(fp);
-    }*/
+    // abre o ficheiro para leitura primeiro
+    fp = fopen("statsconsultas.dat", "r+");
+    if (fp == NULL)
+        perror("Erro a abrir o ficheiro");
+
+    NumeroConsulta nc;
+
+    fread(&nc, sizeof(NumeroConsulta), 1, fp);
+
+    fclose(fp);
+
+    //acrescenta-se os valores desta sessão para atualizar as estatisticas
+    nc.perdidas += consultasPerdidas;
+    nc.tipo1 += consultasNormal;
+    nc.tipo2 += consultasCOVID;
+    nc.tipo3 += consultasUrgente;
+
+    //torna-se a abrir o ficheiro para escrever
+    fp = fopen("statsconsultas.dat", "w+");
+    if (fp == NULL)
+        perror("Erro a abrir o ficheiro");
+
+    fwrite(&nc,  sizeof(NumeroConsulta),1, fp);
+    fclose(fp);
+
     exit(EXIT_SUCCESS);
 }
 
@@ -62,12 +79,14 @@ void iniciaConsulta(){
 
     fclose(fp);
 
+    //conversão dos valores recolhidos
     ctipo = atoi(chartipo);
     cpid = atoi(charpid);
 
-    //S3.2) Escreve no ecrã a mensagem
+    //Read strings: Solution 1: fgets() with workaround
     cdesc[strlen(cdesc)-1] = '\0';
 
+    //S3.2) Escreve no ecrã a mensagem
     printf("Chegou novo pedido de consulta do tipo %d, descricao %s e PID %d\n", ctipo, cdesc, cpid);
 
     //S3.3) Verifica se a Lista de Consultas tem alguma “vaga”.
@@ -84,8 +103,10 @@ void iniciaConsulta(){
         lista_consultas[ultimaConsulta].pid_consulta = cpid;
         printf("Consulta agendada para a sala %d\n", ultimaConsulta++);
 
+        // adiciona as variaveis globais mais um tipo de consulta efetuada
         contatipoconsulta(ctipo);
 
+        // criação de um processo filho que irá tratar da consulta
         int child = fork();
         if(child == 0){
             kill(cpid, SIGHUP);
